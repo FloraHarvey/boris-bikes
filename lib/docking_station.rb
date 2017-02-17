@@ -15,12 +15,22 @@ class DockingStation
   # end
 
   def release_bike
-    raise "No bikes available" if empty?
-    @bikes.pop
+    raise "No bikes available" if empty? 
+    @bikes.each do |bike|
+      if bike.working == true
+        @bikes.delete(bike)
+        return bike
+      end
+    end
+    raise "No bikes available"
   end
 
-  def dock_bike(bike)
+  def dock_bike(bike, status=true)
+    if status == false
+      bike.working = false
+    end
     raise "Docking station is full" if full?
+  
     @bikes.push(bike)
   end
 
@@ -38,10 +48,9 @@ end
 
 
 class Bike
-  def working?
-    true
+  attr_accessor :working
+  def initialize(working = true)
+    @working = working
   end
-  def docked?
-    true
-  end
+
 end
